@@ -15,6 +15,9 @@
 		815337891B10240900FC5DA5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 815337881B10240900FC5DA5 /* Images.xcassets */; };
 		8153378C1B10240900FC5DA5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8153378A1B10240900FC5DA5 /* LaunchScreen.xib */; };
 		815337981B10240900FC5DA5 /* SpriteImageTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 815337971B10240900FC5DA5 /* SpriteImageTestTests.swift */; };
+		815337A31B1025E000FC5DA5 /* AssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 815337A11B1025E000FC5DA5 /* AssetManager.swift */; };
+		815337A41B1025E000FC5DA5 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 815337A21B1025E000FC5DA5 /* ImageManager.swift */; };
+		815337A61B10284900FC5DA5 /* ImageSprite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 815337A51B10284900FC5DA5 /* ImageSprite.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +43,9 @@
 		815337911B10240900FC5DA5 /* SpriteImageTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpriteImageTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		815337961B10240900FC5DA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		815337971B10240900FC5DA5 /* SpriteImageTestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteImageTestTests.swift; sourceTree = "<group>"; };
+		815337A11B1025E000FC5DA5 /* AssetManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetManager.swift; sourceTree = "<group>"; };
+		815337A21B1025E000FC5DA5 /* ImageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
+		815337A51B10284900FC5DA5 /* ImageSprite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageSprite.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,9 +87,12 @@
 		8153377A1B10240900FC5DA5 /* SpriteImageTest */ = {
 			isa = PBXGroup;
 			children = (
+				815337A11B1025E000FC5DA5 /* AssetManager.swift */,
+				815337A21B1025E000FC5DA5 /* ImageManager.swift */,
 				8153377D1B10240900FC5DA5 /* AppDelegate.swift */,
 				8153377F1B10240900FC5DA5 /* GameScene.sks */,
 				815337811B10240900FC5DA5 /* GameScene.swift */,
+				815337A51B10284900FC5DA5 /* ImageSprite.swift */,
 				815337831B10240900FC5DA5 /* GameViewController.swift */,
 				815337851B10240900FC5DA5 /* Main.storyboard */,
 				815337881B10240900FC5DA5 /* Images.xcassets */,
@@ -219,8 +228,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				815337A31B1025E000FC5DA5 /* AssetManager.swift in Sources */,
+				815337A41B1025E000FC5DA5 /* ImageManager.swift in Sources */,
 				815337821B10240900FC5DA5 /* GameScene.swift in Sources */,
 				815337841B10240900FC5DA5 /* GameViewController.swift in Sources */,
+				815337A61B10284900FC5DA5 /* ImageSprite.swift in Sources */,
 				8153377E1B10240900FC5DA5 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
