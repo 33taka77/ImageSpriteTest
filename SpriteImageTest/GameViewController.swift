@@ -27,6 +27,13 @@ extension SKNode {
 
 class GameViewController: UIViewController {
 
+    @IBAction func pinchEvent(sender: AnyObject) {
+        let pinchRecognizer:UIPinchGestureRecognizer = sender as! UIPinchGestureRecognizer
+        let scale = pinchRecognizer.scale
+        let skView = self.view as! SKView
+        let myScene:GameScene = skView.scene as! GameScene
+        myScene.changeScale(scale)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -43,6 +50,7 @@ class GameViewController: UIViewController {
             scene.scaleMode = .AspectFill
             
             skView.presentScene(scene)
+            
         }
     }
 

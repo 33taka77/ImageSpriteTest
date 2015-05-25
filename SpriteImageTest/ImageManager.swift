@@ -42,8 +42,7 @@ class ImageManager:ImageBaseService {
 class ImageObject:Item {
     func getThumbnail( callback: (UIImage)->Void ) {
     }
-    func getImageWithSize(size:ImageSize)->UIImage? {
-        return nil
+    func getImageWithSize(size:CGSize, callback: (UIImage)->Void ){
     }
     func getSize()->CGSize {
         return CGSizeMake(0, 0)

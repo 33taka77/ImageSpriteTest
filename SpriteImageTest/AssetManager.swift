@@ -234,6 +234,14 @@ class Asset:ImageObject {
             callback(image: image)
         })
     }
+    override func getImageWithSize(size: CGSize, callback: (image:UIImage)->Void ) {
+        var imageData:UIImage?
+        let option = PHImageRequestOptions()
+        option.deliveryMode = PHImageRequestOptionsDeliveryMode.HighQualityFormat
+        PHImageManager.defaultManager().requestImageForAsset(asset, targetSize: size, contentMode:PHImageContentMode.AspectFill, options: option, resultHandler: { (image, info) -> Void in
+        callback(image: image)
+        })
+    }
     override func getSize()->CGSize {
         return CGSizeMake(CGFloat(asset.pixelWidth), CGFloat(asset.pixelHeight))
     }
