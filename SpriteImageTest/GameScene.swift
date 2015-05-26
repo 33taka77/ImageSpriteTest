@@ -31,9 +31,30 @@ class GameScene: SKScene {
     let scrollAccellParameter:CGFloat = 0.3
     let decleaseSpeedParam:CGFloat = 4
     
-    let xOffset47Inch:CGFloat = 19
-    let yOffset47InchCase1:CGFloat = 13
-    let yOffset47InchCase2:CGFloat = 28
+    let xOffset47Inchx1:CGFloat = 19
+    let yOffset47InchCase1x1:CGFloat = 13
+    let yOffset47InchCase2x1:CGFloat = 28
+
+    let xOffset47Inchx2:CGFloat = 19
+    let yOffset47InchCase1x2:CGFloat = 13
+    let yOffset47InchCase2x2:CGFloat = 28
+   
+    let xOffset47Inchx3:CGFloat = 19
+    let yOffset47InchCase1x3:CGFloat = 13
+    let yOffset47InchCase2x3:CGFloat = 28
+
+    let xOffset47Inchx4:CGFloat = 14
+    let yOffset47InchCase1x4:CGFloat = 11
+    let yOffset47InchCase2x4:CGFloat = 28
+
+    let xOffset47Inchx5:CGFloat = 19
+    let yOffset47InchCase1x5:CGFloat = 13
+    let yOffset47InchCase2x5:CGFloat = 28
+
+    let xOffset47Inchx6:CGFloat = 19
+    let yOffset47InchCase1x6:CGFloat = 13
+    let yOffset47InchCase2x6:CGFloat = 28
+
     let xOffset55Inch:CGFloat = 19
     let yOffset55InchCase1:CGFloat = 13
     let yOffset55InchCase2:CGFloat = 20
@@ -45,7 +66,11 @@ class GameScene: SKScene {
     let yOffset35InchCase2:CGFloat = 20
     
     var screenSize:CGSize
-    var colume:Int = 4
+    var colume:Int = 4 {
+        didSet{
+            getOffset(false)
+        }
+    }
     let intervalSpace:CGFloat = 0.0
     let aroundSpace:CGFloat = 2.0
     let imageManager:ImageManager!
@@ -195,9 +220,9 @@ class GameScene: SKScene {
                 let x = (spriteWidth-xOffset)*CGFloat(i % self.colume) + self.aroundSpace + self.intervalSpace*CGFloat(i % self.colume)
                 let prevSprite:ImageSprite = self.imageSpriteArray[i-self.colume]
                 if prevSprite.originalSize.height > prevSprite.originalSize.width {
-                    yOffset = yOffset47InchCase2
+                    getOffset(true)
                 }else{
-                    yOffset = yOffset47InchCase1
+                    getOffset(false)
                 }
                 let y = prevSprite.posotion.y + prevSprite.targetSize.height + self.intervalSpace - yOffset
                 pos = CGPointMake(x, y)
@@ -205,9 +230,9 @@ class GameScene: SKScene {
                 let x = self.aroundSpace
                 let prevSprite:ImageSprite = self.imageSpriteArray[i-self.colume]
                 if prevSprite.originalSize.height > prevSprite.originalSize.width {
-                    yOffset = yOffset47InchCase2
+                    getOffset(true)
                 }else{
-                    yOffset = yOffset47InchCase1
+                    getOffset(false)
                 }
                 let y = prevSprite.posotion.y + prevSprite.targetSize.height + self.intervalSpace - yOffset
                 pos = CGPointMake(x, y)
@@ -217,7 +242,54 @@ class GameScene: SKScene {
             imageSprite.moveWithAction()
         }
     }
-    
+    private func getOffset( isVirtical:Bool ) {
+        switch self.colume {
+        case 1:
+            xOffset = xOffset47Inchx1
+            if isVirtical {
+                yOffset = yOffset47InchCase1x2
+            }else{
+                yOffset = yOffset47InchCase1x1
+            }
+        case 2:
+            xOffset = xOffset47Inchx2
+            if isVirtical {
+                yOffset = yOffset47InchCase2x2
+            }else{
+                yOffset = yOffset47InchCase1x2
+            }
+        case 3:
+            xOffset = xOffset47Inchx3
+            if isVirtical {
+                yOffset = yOffset47InchCase2x3
+            }else{
+                yOffset = yOffset47InchCase1x3
+            }
+       case 4:
+            xOffset = xOffset47Inchx4
+            if isVirtical {
+                yOffset = yOffset47InchCase2x4
+            }else{
+                yOffset = yOffset47InchCase1x4
+            }
+        case 5:
+            xOffset = xOffset47Inchx5
+            if isVirtical {
+                yOffset = yOffset47InchCase2x5
+            }else{
+                yOffset = yOffset47InchCase1x5
+            }
+        case 6:
+            xOffset = xOffset47Inchx6
+            if isVirtical {
+                yOffset = yOffset47InchCase2x6
+            }else{
+                yOffset = yOffset47InchCase1x6
+            }
+       default:
+            println("error")
+        }
+    }
     
     private func containObject ( array:[AnyObject], object:AnyObject )->(Bool,Int) {
         for (index, obj) in enumerate(array) {
@@ -246,9 +318,9 @@ class GameScene: SKScene {
                 let x = (spriteWidth-xOffset)*CGFloat(i % self.colume) + self.aroundSpace + self.intervalSpace*CGFloat(i % self.colume)
                 let prevSprite:ImageSprite = self.imageSpriteArray[i-self.colume]
                 if prevSprite.originalSize.height > prevSprite.originalSize.width {
-                    yOffset = yOffset47InchCase2
+                    getOffset(true)
                 }else{
-                    yOffset = yOffset47InchCase1
+                    getOffset(false)
                 }
                 let y = prevSprite.posotion.y + prevSprite.targetSize.height + self.intervalSpace - yOffset
                 pos = CGPointMake(x, y)
@@ -256,9 +328,9 @@ class GameScene: SKScene {
                 let x = self.aroundSpace
                 let prevSprite:ImageSprite = self.imageSpriteArray[i-self.colume]
                 if prevSprite.originalSize.height > prevSprite.originalSize.width {
-                    yOffset = yOffset47InchCase2
+                    getOffset(true)
                 }else{
-                    yOffset = yOffset47InchCase1
+                    getOffset(false)
                 }
                 let y = prevSprite.posotion.y + prevSprite.targetSize.height + self.intervalSpace - yOffset
                 pos = CGPointMake(x, y)

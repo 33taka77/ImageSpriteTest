@@ -86,9 +86,11 @@ class ImageSprite {
             let prevSize:CGSize = self.sprite.size
             let newSize:CGSize = self.targetSize
             let scale:CGFloat = self.targetSize.width/self.sprite.size.width
-            let scaleXAction:SKAction = SKAction.scaleXTo(scale, duration: 0.2)
-            let scaleYAction:SKAction = SKAction.scaleYTo(scale, duration: 0.2)
-            let actionArray = [moveAction, scaleXAction,scaleYAction]
+            let scaleAction:SKAction = SKAction.scaleTo(scale, duration: 0.2)
+            //let scaleXAction:SKAction = SKAction.scaleXTo(scale, duration: 0.2)
+            //let scaleYAction:SKAction = SKAction.scaleYTo(scale, duration: 0.2)
+            //let actionArray = [moveAction, scaleXAction,scaleYAction]
+            let actionArray = [moveAction, scaleAction]
             let action = SKAction.sequence(actionArray)
             self.sprite.runAction(action)
         }
