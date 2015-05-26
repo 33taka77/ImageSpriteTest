@@ -21,7 +21,7 @@ class GameScene: SKScene {
     }
     class TouchEventInfo {
         var prevPoint:CGPoint = CGPointMake(0, 0)
-        var prevTime:NSTimeInterval = 0
+        var prevTime:CFTimeInterval = 0
         var kindOfTouch:TouchKind = TouchKind.none
         var speed:CGFloat = 0
         var intervalTime:CFTimeInterval!
@@ -45,7 +45,7 @@ class GameScene: SKScene {
     let yOffset35InchCase2:CGFloat = 20
     
     var screenSize:CGSize
-    var colume:Int = 6
+    var colume:Int = 4
     let intervalSpace:CGFloat = 0.0
     let aroundSpace:CGFloat = 2.0
     let imageManager:ImageManager!
@@ -54,6 +54,7 @@ class GameScene: SKScene {
     var xOffset:CGFloat = 19
     var yOffset:CGFloat = 13
     var touchObject:TouchEventInfo!
+    var pinchCount:Int = 0
     
     override init() {
         screenSize = CGSizeMake(0, 0)
@@ -161,6 +162,10 @@ class GameScene: SKScene {
     }
     
     func changeScale( scale:CGFloat ) {
+        pinchCount++
+        if pinchCount < 10 {
+            return
+        }
         if scale > 1.0 {
             colume = colume - 1
             if colume < 1 {
@@ -173,6 +178,7 @@ class GameScene: SKScene {
             }
         }
         changeColume()
+        pinchCount = 0
     }
     
     // private functions

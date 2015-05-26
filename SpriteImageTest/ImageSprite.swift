@@ -82,10 +82,13 @@ class ImageSprite {
     }
     func moveWithAction() {
         if self.sprite != nil {
-            let moveAction:SKAction = SKAction.moveTo(self.nodePosition, duration: 1.0)
+            let moveAction:SKAction = SKAction.moveTo(self.nodePosition, duration: 0.2)
+            let prevSize:CGSize = self.sprite.size
+            let newSize:CGSize = self.targetSize
             let scale:CGFloat = self.targetSize.width/self.sprite.size.width
-            let scaleAction:SKAction = SKAction.scaleXTo(scale, duration: 1.0)
-            let actionArray = [moveAction, scaleAction]
+            let scaleXAction:SKAction = SKAction.scaleXTo(scale, duration: 0.2)
+            let scaleYAction:SKAction = SKAction.scaleYTo(scale, duration: 0.2)
+            let actionArray = [moveAction, scaleXAction,scaleYAction]
             let action = SKAction.sequence(actionArray)
             self.sprite.runAction(action)
         }
