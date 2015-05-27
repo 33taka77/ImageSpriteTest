@@ -35,9 +35,9 @@ class GameScene: SKScene {
     let yOffset47InchCase1x1:CGFloat = 13
     let yOffset47InchCase2x1:CGFloat = 28
 
-    let xOffset47Inchx2:CGFloat = 26
-    let yOffset47InchCase1x2:CGFloat = 13
-    let yOffset47InchCase2x2:CGFloat = 28
+    let xOffset47Inchx2:CGFloat = 28
+    let yOffset47InchCase1x2:CGFloat = 19
+    let yOffset47InchCase2x2:CGFloat = 42
    
     let xOffset47Inchx3:CGFloat = 19
     let yOffset47InchCase1x3:CGFloat = 13
@@ -47,13 +47,13 @@ class GameScene: SKScene {
     let yOffset47InchCase1x4:CGFloat = 11
     let yOffset47InchCase2x4:CGFloat = 28
 
-    let xOffset47Inchx5:CGFloat = 19
-    let yOffset47InchCase1x5:CGFloat = 13
-    let yOffset47InchCase2x5:CGFloat = 28
+    let xOffset47Inchx5:CGFloat = 11
+    let yOffset47InchCase1x5:CGFloat = 8
+    let yOffset47InchCase2x5:CGFloat = 17
 
-    let xOffset47Inchx6:CGFloat = 19
-    let yOffset47InchCase1x6:CGFloat = 13
-    let yOffset47InchCase2x6:CGFloat = 28
+    let xOffset47Inchx6:CGFloat = 10
+    let yOffset47InchCase1x6:CGFloat = 7
+    let yOffset47InchCase2x6:CGFloat = 15
 
     let xOffset55Inch:CGFloat = 19
     let yOffset55InchCase1:CGFloat = 13
@@ -95,6 +95,7 @@ class GameScene: SKScene {
         super.init(coder: aDecoder)
         imageManager.setupData()
         touchObject = TouchEventInfo()
+        getOffset(true)
     }
     
     override func didMoveToView(view: SKView) {
@@ -108,6 +109,7 @@ class GameScene: SKScene {
         self.addChild(myLabel)
         self.buildImageSprite()
         self.prepareImageSpriteToDraw(0, endHeight: screenSize.height+200)
+        getOffset(true)
 
     }
     
@@ -187,14 +189,16 @@ class GameScene: SKScene {
     }
     
     func changeScale( scale:CGFloat ) {
+        colume = 2
+        /*
         pinchCount++
-        if pinchCount < 10 {
+        if pinchCount < 100 {
             return
         }
         if scale > 1.0 {
             colume = colume - 1
-            if colume < 1 {
-                colume = 1
+            if colume < 2 {
+                colume = 2
             }
         }else{
             colume = colume + 1
@@ -202,6 +206,7 @@ class GameScene: SKScene {
                 colume = maxColume
             }
         }
+        */
         changeColume()
         pinchCount = 0
     }
@@ -212,6 +217,28 @@ class GameScene: SKScene {
         for var i = 0; i < imageSpriteArray.count; i++ {
             let imageSprite:ImageSprite = imageSpriteArray[i]
             let pos:CGPoint
+            println("spriteWidth = \(spriteWidth)")
+            let x = (spriteWidth-xOffset)*CGFloat(i % self.colume) + self.aroundSpace + self.intervalSpace*CGFloat(i % self.colume)
+            println("x= \(x)")
+            println("xOffset= \(xOffset)")
+            let num = i  % self.colume
+            println("i % self.colume= \(num)")
+            println("self.aroundSpace= \(self.aroundSpace)")
+            println("self.intervalSpace= \(self.intervalSpace)")
+            if i < self.colume {
+                let y = 0+self.aroundSpace
+                pos = CGPointMake(x, y)
+            }else{
+                let prevSprite:ImageSprite = self.imageSpriteArray[i-self.colume]
+                if prevSprite.originalSize.height > prevSprite.originalSize.width {
+                    getOffset(true)
+                }else{
+                    getOffset(false)
+                }
+                let y = prevSprite.posotion.y + prevSprite.targetSize.height + self.intervalSpace - yOffset
+                pos = CGPointMake(x, y)
+            }
+/*
             if i < self.colume {
                 let x = (spriteWidth-xOffset)*CGFloat(i) + self.aroundSpace + self.intervalSpace*CGFloat(i)
                 let y = 0+self.aroundSpace
@@ -237,6 +264,7 @@ class GameScene: SKScene {
                 let y = prevSprite.posotion.y + prevSprite.targetSize.height + self.intervalSpace - yOffset
                 pos = CGPointMake(x, y)
             }
+*/
             imageSprite.setTargetSize(CGSizeMake(spriteWidth, spriteWidth*imageSprite.originalSize.height/imageSprite.originalSize.width))
             imageSprite.setPosition(pos)
             imageSprite.moveWithAction()
@@ -310,8 +338,14 @@ class GameScene: SKScene {
             let size = CGSizeMake(spriteWidth, spriteWidth/sizeOfOriginal.width*sizeOfOriginal.height)
             let imageSprite:ImageSprite = ImageSprite(index: index, targetWidth:spriteWidth, size:size, scene:self)
             let pos:CGPoint
-            
+            println("spriteWidth = \(spriteWidth)")
             let x = (spriteWidth-xOffset)*CGFloat(i % self.colume) + self.aroundSpace + self.intervalSpace*CGFloat(i % self.colume)
+            println("x= \(x)")
+            println("xOffset= \(xOffset)")
+            let num = i  % self.colume
+            println("i % self.colume= \(num)")
+            println("self.aroundSpace= \(self.aroundSpace)")
+            println("self.intervalSpace= \(self.intervalSpace)")
             if i < self.colume {
                 let y = 0+self.aroundSpace
                 pos = CGPointMake(x, y)
