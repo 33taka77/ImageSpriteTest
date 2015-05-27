@@ -238,7 +238,10 @@ class Asset:ImageObject {
         var imageData:UIImage?
         let option = PHImageRequestOptions()
         option.deliveryMode = PHImageRequestOptionsDeliveryMode.HighQualityFormat
-        PHImageManager.defaultManager().requestImageForAsset(asset, targetSize: size, contentMode:PHImageContentMode.AspectFill, options: option, resultHandler: { (image, info) -> Void in
+        option.resizeMode  = PHImageRequestOptionsResizeMode.Fast
+        option.normalizedCropRect = CGRectMake(0, 0, size.width, size.height)
+        
+        PHImageManager.defaultManager().requestImageForAsset(asset, targetSize: size, contentMode:PHImageContentMode.AspectFit, options: option, resultHandler: { (image, info) -> Void in
         callback(image: image)
         })
     }

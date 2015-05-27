@@ -35,7 +35,7 @@ class GameScene: SKScene {
     let yOffset47InchCase1x1:CGFloat = 13
     let yOffset47InchCase2x1:CGFloat = 28
 
-    let xOffset47Inchx2:CGFloat = 19
+    let xOffset47Inchx2:CGFloat = 26
     let yOffset47InchCase1x2:CGFloat = 13
     let yOffset47InchCase2x2:CGFloat = 28
    
@@ -66,7 +66,7 @@ class GameScene: SKScene {
     let yOffset35InchCase2:CGFloat = 20
     
     var screenSize:CGSize
-    var colume:Int = 4 {
+    var colume:Int = 2 {
         didSet{
             getOffset(false)
         }
@@ -310,11 +310,28 @@ class GameScene: SKScene {
             let size = CGSizeMake(spriteWidth, spriteWidth/sizeOfOriginal.width*sizeOfOriginal.height)
             let imageSprite:ImageSprite = ImageSprite(index: index, targetWidth:spriteWidth, size:size, scene:self)
             let pos:CGPoint
+            
+            let x = (spriteWidth-xOffset)*CGFloat(i % self.colume) + self.aroundSpace + self.intervalSpace*CGFloat(i % self.colume)
+            if i < self.colume {
+                let y = 0+self.aroundSpace
+                pos = CGPointMake(x, y)
+            }else{
+                let prevSprite:ImageSprite = self.imageSpriteArray[i-self.colume]
+                if prevSprite.originalSize.height > prevSprite.originalSize.width {
+                    getOffset(true)
+                }else{
+                    getOffset(false)
+                }
+                let y = prevSprite.posotion.y + prevSprite.targetSize.height + self.intervalSpace - yOffset
+                pos = CGPointMake(x, y)
+            }
+            /*
             if i < self.colume {
                 let x = (spriteWidth-xOffset)*CGFloat(i) + self.aroundSpace + self.intervalSpace*CGFloat(i)
                 let y = 0+self.aroundSpace
                 pos = CGPointMake(x, y)
             }else if i % self.colume != 0 {
+                //let x = (spriteWidth-xOffset)*CGFloat(1) + self.aroundSpace + self.intervalSpace*CGFloat(1)
                 let x = (spriteWidth-xOffset)*CGFloat(i % self.colume) + self.aroundSpace + self.intervalSpace*CGFloat(i % self.colume)
                 let prevSprite:ImageSprite = self.imageSpriteArray[i-self.colume]
                 if prevSprite.originalSize.height > prevSprite.originalSize.width {
@@ -335,6 +352,7 @@ class GameScene: SKScene {
                 let y = prevSprite.posotion.y + prevSprite.targetSize.height + self.intervalSpace - yOffset
                 pos = CGPointMake(x, y)
             }
+            */
             if totalHeight < pos.y + imageSprite.targetSize.height {
                 totalHeight = pos.y + imageSprite.targetSize.height
             }
