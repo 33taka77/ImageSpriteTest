@@ -25,8 +25,18 @@ extension SKNode {
     }
 }
 
+protocol SpriteViewDelegate {
+    func numOfSections()->Int
+    func sectionTitleString()->String
+    func numOfItemsInSection( section:Int )->Int
+}
+
 class GameViewController: UIViewController {
 
+    var delegate:SpriteViewDelegate!
+    
+    var numOfSection:Int = 1
+    
     @IBAction func pinchEvent(sender: AnyObject) {
         let pinchRecognizer:UIPinchGestureRecognizer = sender as! UIPinchGestureRecognizer
         let scale = pinchRecognizer.scale
@@ -50,6 +60,7 @@ class GameViewController: UIViewController {
             scene.scaleMode = .AspectFill
             
             skView.presentScene(scene)
+            numOfSection = self.delegate.numOfSections()
             
         }
     }
