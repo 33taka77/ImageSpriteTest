@@ -100,6 +100,7 @@ class GameScene: SKScene {
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
+        self.physicsBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
         screenSize = CGSizeMake(self.view!.frame.width,self.view!.frame.height)
         let myLabel = SKLabelNode(fontNamed:"Chalkduster")
         myLabel.text = "Hello, World!";
@@ -192,7 +193,7 @@ class GameScene: SKScene {
     func changeScale( scale:CGFloat ) {
         
         pinchCount++
-        if pinchCount < 20 {
+        if pinchCount < 10 {
             return
         }
         if scale > 1.0 {
@@ -206,14 +207,25 @@ class GameScene: SKScene {
                 colume = maxColume
             }
         }
-        
-        //self.removeAllImageSprite()
+       // crashImages()
+        //let timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "timerFunc", userInfo: nil, repeats: false)
         changeColume()
-        //self.prepareImageSpriteToDraw(0, endHeight: screenSize.height+500)
         pinchCount = 0
     }
     
     // private functions
+    func timerFunc() {
+        changeColume()
+    }
+    
+    private func crashImages() {
+        for imageSprite in imagesForDraw {
+            if imageSprite.sprite != nil {
+                imageSprite.sprite.physicsBody = SKPhysicsBody(rectangleOfSize: imageSprite.sprite.size)
+                imageSprite.sprite.physicsBody?.applyForce(CGVectorMake(1.0, 1.0))
+            }
+        }
+    }
     private func removeAllImageSprite() {
         var removeImage:[AnyObject] = []
         for var i = 0; i < imagesForDraw.count; i++ {
@@ -230,6 +242,9 @@ class GameScene: SKScene {
         let spriteWidth = (screenSize.width - aroundSpace*2 - CGFloat(colume-1)*intervalSpace + xOffset*CGFloat(colume))  / CGFloat(colume)
         for var i = 0; i < imageSpriteArray.count; i++ {
             let imageSprite:ImageSprite = imageSpriteArray[i]
+            if imageSprite.sprite != nil {
+                imageSprite.sprite.physicsBody = nil
+            }
             let pos:CGPoint
             println("spriteWidth = \(spriteWidth)")
             let x = (spriteWidth-xOffset)*CGFloat(i % self.colume) + self.aroundSpace + self.intervalSpace*CGFloat(i % self.colume)

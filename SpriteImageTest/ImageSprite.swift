@@ -67,6 +67,7 @@ class ImageSprite {
         sprite.yScale = self.scale
         let nodePos = self.nodePosition
         self.sprite.position = nodePos
+        //self.sprite.physicsBody = SKPhysicsBody(rectangleOfSize: self.sprite.size)
     }
     func move() {
         if self.sprite != nil {

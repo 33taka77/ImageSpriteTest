@@ -60,7 +60,7 @@ class GameViewController: UIViewController {
             scene.scaleMode = .AspectFill
             
             skView.presentScene(scene)
-            numOfSection = self.delegate.numOfSections()
+            //numOfSection = self.delegate.numOfSections()
             
         }
     }
