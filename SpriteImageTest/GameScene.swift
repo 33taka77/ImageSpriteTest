@@ -66,7 +66,7 @@ class GameScene: SKScene {
     let yOffset35InchCase2:CGFloat = 20
     
     var screenSize:CGSize
-    var colume:Int = 2 {
+    var colume:Int = 5 {
         didSet{
             getOffset(false)
         }
@@ -108,7 +108,7 @@ class GameScene: SKScene {
         
         self.addChild(myLabel)
         self.buildImageSprite()
-        self.prepareImageSpriteToDraw(0, endHeight: screenSize.height+200)
+        self.prepareImageSpriteToDraw(0, endHeight: screenSize.height+500)
         getOffset(true)
 
     }
@@ -154,6 +154,7 @@ class GameScene: SKScene {
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
         //println("C")
+        removeImageSprite(-200, endHeight: screenSize.height+200)
         switch touchObject.kindOfTouch {
         case .flicScrollDown:
             println("")
@@ -189,10 +190,9 @@ class GameScene: SKScene {
     }
     
     func changeScale( scale:CGFloat ) {
-        colume = 2
-        /*
+        
         pinchCount++
-        if pinchCount < 100 {
+        if pinchCount < 20 {
             return
         }
         if scale > 1.0 {
@@ -206,12 +206,26 @@ class GameScene: SKScene {
                 colume = maxColume
             }
         }
-        */
+        
+        //self.removeAllImageSprite()
         changeColume()
+        //self.prepareImageSpriteToDraw(0, endHeight: screenSize.height+500)
         pinchCount = 0
     }
     
     // private functions
+    private func removeAllImageSprite() {
+        var removeImage:[AnyObject] = []
+        for var i = 0; i < imagesForDraw.count; i++ {
+            let imageSprite = imageSpriteArray[i]
+            if imageSprite.sprite != nil {
+                removeImage.append(imageSprite.sprite)
+                imageSprite.sprite = nil
+                imagesForDraw.removeAtIndex(i)
+            }
+        }
+        self.removeChildrenInArray(removeImage)
+    }
     private func changeColume() {
         let spriteWidth = (screenSize.width - aroundSpace*2 - CGFloat(colume-1)*intervalSpace + xOffset*CGFloat(colume))  / CGFloat(colume)
         for var i = 0; i < imageSpriteArray.count; i++ {
@@ -268,6 +282,7 @@ class GameScene: SKScene {
             imageSprite.setTargetSize(CGSizeMake(spriteWidth, spriteWidth*imageSprite.originalSize.height/imageSprite.originalSize.width))
             imageSprite.setPosition(pos)
             imageSprite.moveWithAction()
+            //removeImageSprite(-200, endHeight: screenSize.height+500)
         }
     }
     private func getOffset( isVirtical:Bool ) {
@@ -414,6 +429,7 @@ class GameScene: SKScene {
     }
     private func removeImageSprite( startHeight:CGFloat, endHeight:CGFloat ) {
         var removeImage:[AnyObject] = []
+        let count = imagesForDraw.count
         for var index = 0; index < imagesForDraw.count; index++  {
             let imageSprite = imagesForDraw[index]
             let currentHeight = imageSprite.posotion.y + imageSprite.targetSize.height
@@ -421,10 +437,12 @@ class GameScene: SKScene {
                 if imageSprite.sprite != nil {
                     let (isExist:Bool,index:Int) = self.containObject(self.children, object: imageSprite.sprite)
                     if isExist == true {
-                        removeImage.append(imageSprite.sprite)
-                        imageSprite.sprite = nil
                         if index < imagesForDraw.count {
+                            removeImage.append(imageSprite.sprite)
+                            imageSprite.sprite = nil
                             imagesForDraw.removeAtIndex(index)
+                        }else{
+                            //println("error")
                         }
                     }
                 }
@@ -432,6 +450,7 @@ class GameScene: SKScene {
         }
         self.removeChildrenInArray(removeImage)
     }
+    
     private func scrollImageSprite( distance:CGFloat ) {
         for imageSprite in imageSpriteArray{
             imageSprite.posotion = CGPointMake(imageSprite.posotion.x, imageSprite.posotion.y+distance)
