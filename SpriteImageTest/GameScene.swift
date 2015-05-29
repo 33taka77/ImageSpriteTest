@@ -26,6 +26,22 @@ class GameScene: SKScene {
         var speed:CGFloat = 0
         var intervalTime:CFTimeInterval!
     }
+    class SectionInfo {
+        var titleNode:SKLabelNode
+        var sectionSprite:SKSpriteNode
+        var titlePosition:CGPoint
+        var sectionPosition:CGPoint
+        
+        init( title:String, imageName:String ) {
+            let imageTexture = SKTexture(imageNamed: imageName)
+            sectionSprite = SKSpriteNode(texture: imageTexture)
+            titleNode = SKLabelNode(text: title)
+            titleNode.fontColor = UIColor.whiteColor()
+            titleNode.fontSize = 12
+            titlePosition = CGPointMake(0, 0)
+            sectionPosition = CGPointMake(0, 0)
+        }
+    }
     
     let maxColume:Int = 6
     let scrollAccellParameter:CGFloat = 0.3
@@ -80,6 +96,7 @@ class GameScene: SKScene {
     var yOffset:CGFloat = 13
     var touchObject:TouchEventInfo!
     var pinchCount:Int = 0
+    var sectionTitles:[SectionInfo] = []
     
     override init() {
         screenSize = CGSizeMake(0, 0)
@@ -107,8 +124,11 @@ class GameScene: SKScene {
         myLabel.fontSize = 65;
         myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
         
+        
         self.addChild(myLabel)
-        self.buildImageSprite()
+        //let currentHeight = buildImageInSection( 0, startYpos:0, initializeFlag:true )
+        buildTotalImages(true)
+        //self.buildImageSprite()
         self.prepareImageSpriteToDraw(0, endHeight: screenSize.height+500)
         getOffset(true)
 
@@ -209,13 +229,16 @@ class GameScene: SKScene {
         }
        // crashImages()
         //let timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "timerFunc", userInfo: nil, repeats: false)
-        changeColume()
+        //changeColume()
+        //let currentHeight = buildImageInSection( 0, startYpos:0, initializeFlag:false )
+        buildTotalImages(false)
         pinchCount = 0
     }
     
     // private functions
     func timerFunc() {
-        changeColume()
+        //changeColume()
+        buildTotalImages(false)
     }
     
     private func crashImages() {
@@ -267,33 +290,6 @@ class GameScene: SKScene {
                 let y = prevSprite.posotion.y + prevSprite.targetSize.height + self.intervalSpace - yOffset
                 pos = CGPointMake(x, y)
             }
-/*
-            if i < self.colume {
-                let x = (spriteWidth-xOffset)*CGFloat(i) + self.aroundSpace + self.intervalSpace*CGFloat(i)
-                let y = 0+self.aroundSpace
-                pos = CGPointMake(x, y)
-            }else if i % self.colume != 0 {
-                let x = (spriteWidth-xOffset)*CGFloat(i % self.colume) + self.aroundSpace + self.intervalSpace*CGFloat(i % self.colume)
-                let prevSprite:ImageSprite = self.imageSpriteArray[i-self.colume]
-                if prevSprite.originalSize.height > prevSprite.originalSize.width {
-                    getOffset(true)
-                }else{
-                    getOffset(false)
-                }
-                let y = prevSprite.posotion.y + prevSprite.targetSize.height + self.intervalSpace - yOffset
-                pos = CGPointMake(x, y)
-            }else{
-                let x = self.aroundSpace
-                let prevSprite:ImageSprite = self.imageSpriteArray[i-self.colume]
-                if prevSprite.originalSize.height > prevSprite.originalSize.width {
-                    getOffset(true)
-                }else{
-                    getOffset(false)
-                }
-                let y = prevSprite.posotion.y + prevSprite.targetSize.height + self.intervalSpace - yOffset
-                pos = CGPointMake(x, y)
-            }
-*/
             imageSprite.setTargetSize(CGSizeMake(spriteWidth, spriteWidth*imageSprite.originalSize.height/imageSprite.originalSize.width))
             imageSprite.setPosition(pos)
             imageSprite.moveWithAction()
@@ -357,6 +353,81 @@ class GameScene: SKScene {
         }
         return (false,-1)
     }
+    private func buildTotalImages( initializeFlag:Bool ) {
+        if initializeFlag == true {
+            let sections = imageManager.getSectionArray()
+            for sectionTitleString in sections {
+                let sectionSprite = SectionInfo(title: sectionTitleString, imageName: "SectionBar.png")
+                self.addChild(sectionSprite.sectionSprite)
+                self.addChild(sectionSprite.titleNode)
+                sectionTitles.append(sectionSprite)
+            }
+        }else{
+            
+        }
+        var sectionStartPosition:CGFloat = 0
+        for (index,sectionSprite) in enumerate(sectionTitles) {
+            sectionSprite.sectionSprite.size.width = self.view!.frame.width
+            sectionSprite.sectionSprite.size.height = 30
+            sectionSprite.sectionSprite.anchorPoint =  CGPoint(x: 0, y: 1)
+            let sectionPosition = CGPointMake(0, sectionStartPosition)
+            sectionSprite.sectionPosition = sectionPosition
+            sectionSprite.sectionSprite.position = self.convertPointFromView(sectionPosition)
+            let position = CGPointMake(50, sectionStartPosition+sectionSprite.sectionSprite.size.height/2)
+            sectionSprite.titlePosition = position
+            sectionSprite.titleNode.position = self.convertPointFromView(position)
+            sectionStartPosition += sectionSprite.sectionSprite.size.height
+            sectionStartPosition = buildImageInSection(index, startYpos:sectionStartPosition, initializeFlag:initializeFlag)
+        }
+    }
+    private func buildImageInSection( section:Int, startYpos:CGFloat, initializeFlag:Bool )->CGFloat {
+        let numOfImage = imageManager.getImageCount(section)
+        let spriteWidth = (screenSize.width - aroundSpace*2 - CGFloat(colume-1)*intervalSpace + xOffset*CGFloat(colume))  / CGFloat(colume)
+        var totalHeight:CGFloat = 0
+        for var i = 0; i < numOfImage; i++ {
+            let imageSprite:ImageSprite
+            if initializeFlag == true {
+                let index = NSIndexPath(forRow: i, inSection: section)
+                let imageObject:ImageObject = imageManager.getImageObjectIndexAt(index)!
+                let sizeOfOriginal = imageObject.getSize()
+                let size = CGSizeMake(spriteWidth, spriteWidth/sizeOfOriginal.width*sizeOfOriginal.height)
+                imageSprite = ImageSprite(index: index, targetWidth:spriteWidth, size:size, scene:self)
+            }else{
+                imageSprite = imageSpriteArray[i]
+                if imageSprite.sprite != nil {
+                    imageSprite.sprite.physicsBody = nil
+                }
+            }
+            let pos:CGPoint
+            println("spriteWidth = \(spriteWidth)")
+            let x = (spriteWidth-xOffset)*CGFloat(i % self.colume) + self.aroundSpace + self.intervalSpace*CGFloat(i % self.colume)
+            println("x= \(x)")
+            println("xOffset= \(xOffset)")
+            let num = i  % self.colume
+            println("i % self.colume= \(num)")
+            println("self.aroundSpace= \(self.aroundSpace)")
+            println("self.intervalSpace= \(self.intervalSpace)")
+            if i < self.colume {
+                let y = 0+self.aroundSpace + startYpos
+                pos = CGPointMake(x, y)
+            }else{
+                let prevSprite:ImageSprite = self.imageSpriteArray[i-self.colume]
+                if prevSprite.originalSize.height > prevSprite.originalSize.width {
+                    getOffset(true)
+                }else{
+                    getOffset(false)
+                }
+                let y = prevSprite.posotion.y + prevSprite.targetSize.height + self.intervalSpace - yOffset
+                pos = CGPointMake(x, y)
+            }
+            if totalHeight < pos.y + imageSprite.targetSize.height {
+                totalHeight = pos.y + imageSprite.targetSize.height
+            }
+            imageSprite.setPosition(pos)
+            self.imageSpriteArray.append(imageSprite)
+        }
+        return totalHeight
+    }
     private func buildImageSprite() {
         let numOfImage = imageManager.getImageCount(0)
         let spriteWidth = (screenSize.width - aroundSpace*2 - CGFloat(colume-1)*intervalSpace + xOffset*CGFloat(colume))  / CGFloat(colume)
@@ -389,34 +460,6 @@ class GameScene: SKScene {
                 let y = prevSprite.posotion.y + prevSprite.targetSize.height + self.intervalSpace - yOffset
                 pos = CGPointMake(x, y)
             }
-            /*
-            if i < self.colume {
-                let x = (spriteWidth-xOffset)*CGFloat(i) + self.aroundSpace + self.intervalSpace*CGFloat(i)
-                let y = 0+self.aroundSpace
-                pos = CGPointMake(x, y)
-            }else if i % self.colume != 0 {
-                //let x = (spriteWidth-xOffset)*CGFloat(1) + self.aroundSpace + self.intervalSpace*CGFloat(1)
-                let x = (spriteWidth-xOffset)*CGFloat(i % self.colume) + self.aroundSpace + self.intervalSpace*CGFloat(i % self.colume)
-                let prevSprite:ImageSprite = self.imageSpriteArray[i-self.colume]
-                if prevSprite.originalSize.height > prevSprite.originalSize.width {
-                    getOffset(true)
-                }else{
-                    getOffset(false)
-                }
-                let y = prevSprite.posotion.y + prevSprite.targetSize.height + self.intervalSpace - yOffset
-                pos = CGPointMake(x, y)
-            }else{
-                let x = self.aroundSpace
-                let prevSprite:ImageSprite = self.imageSpriteArray[i-self.colume]
-                if prevSprite.originalSize.height > prevSprite.originalSize.width {
-                    getOffset(true)
-                }else{
-                    getOffset(false)
-                }
-                let y = prevSprite.posotion.y + prevSprite.targetSize.height + self.intervalSpace - yOffset
-                pos = CGPointMake(x, y)
-            }
-            */
             if totalHeight < pos.y + imageSprite.targetSize.height {
                 totalHeight = pos.y + imageSprite.targetSize.height
             }
@@ -432,7 +475,7 @@ class GameScene: SKScene {
         for var i = 0; i < self.imageSpriteArray.count; i++ {
             let currentHeight = self.imageSpriteArray[i].posotion.y + self.imageSpriteArray[i].targetSize.height
             if self.imageSpriteArray[i].posotion.y > startHeight && currentHeight < endHeight {
-                let index = NSIndexPath(forRow: i, inSection: 0)
+                let index = self.imageSpriteArray[i].indexPath
                 let imageObject:ImageObject = imageManager.getImageObjectIndexAt(index)!
                 imageObject.getImageWithSize(self.imageSpriteArray[index.row].originalSize, callback: { (image) -> Void in
                     let imageSprite = self.imageSpriteArray[index.row]
@@ -467,6 +510,12 @@ class GameScene: SKScene {
     }
     
     private func scrollImageSprite( distance:CGFloat ) {
+        for section in sectionTitles {
+            let sectionPos = CGPointMake(section.sectionPosition.x, section.sectionPosition.y+distance)
+            section.sectionSprite.position = convertPointFromView(sectionPos)
+            let titlePos = CGPointMake(section.titlePosition.x, section.titlePosition.y+distance)
+            section.titleNode.position = convertPointFromView(titlePos)
+        }
         for imageSprite in imageSpriteArray{
             imageSprite.posotion = CGPointMake(imageSprite.posotion.x, imageSprite.posotion.y+distance)
             imageSprite.move()

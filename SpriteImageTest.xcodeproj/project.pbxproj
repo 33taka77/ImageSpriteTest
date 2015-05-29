@@ -18,6 +18,7 @@
 		815337A31B1025E000FC5DA5 /* AssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 815337A11B1025E000FC5DA5 /* AssetManager.swift */; };
 		815337A41B1025E000FC5DA5 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 815337A21B1025E000FC5DA5 /* ImageManager.swift */; };
 		815337A61B10284900FC5DA5 /* ImageSprite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 815337A51B10284900FC5DA5 /* ImageSprite.swift */; };
+		816B7E971B17E0920021C6DB /* SectionBar.png in Resources */ = {isa = PBXBuildFile; fileRef = 816B7E961B17E0920021C6DB /* SectionBar.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,7 @@
 		815337A11B1025E000FC5DA5 /* AssetManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetManager.swift; sourceTree = "<group>"; };
 		815337A21B1025E000FC5DA5 /* ImageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		815337A51B10284900FC5DA5 /* ImageSprite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageSprite.swift; sourceTree = "<group>"; };
+		816B7E961B17E0920021C6DB /* SectionBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SectionBar.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 		8153377A1B10240900FC5DA5 /* SpriteImageTest */ = {
 			isa = PBXGroup;
 			children = (
+				816B7E961B17E0920021C6DB /* SectionBar.png */,
 				815337A11B1025E000FC5DA5 /* AssetManager.swift */,
 				815337A21B1025E000FC5DA5 /* ImageManager.swift */,
 				8153377D1B10240900FC5DA5 /* AppDelegate.swift */,
@@ -207,6 +210,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				816B7E971B17E0920021C6DB /* SectionBar.png in Resources */,
 				8153378C1B10240900FC5DA5 /* LaunchScreen.xib in Resources */,
 				815337891B10240900FC5DA5 /* Images.xcassets in Resources */,
 				815337801B10240900FC5DA5 /* GameScene.sks in Resources */,
@@ -431,6 +435,7 @@
 				8153379D1B10240900FC5DA5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8153379E1B10240900FC5DA5 /* Build configuration list for PBXNativeTarget "SpriteImageTestTests" */ = {
 			isa = XCConfigurationList;
@@ -439,6 +444,7 @@
 				815337A01B10240900FC5DA5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
