@@ -127,7 +127,7 @@ class GameScene: SKScene {
         
         self.addChild(myLabel)
         //let currentHeight = buildImageInSection( 0, startYpos:0, initializeFlag:true )
-        buildTotalImages(true)
+        buildTotalImages(true,scaleChange: false)
         //self.buildImageSprite()
         self.prepareImageSpriteToDraw(0, endHeight: screenSize.height+500)
         getOffset(true)
@@ -231,14 +231,14 @@ class GameScene: SKScene {
         //let timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "timerFunc", userInfo: nil, repeats: false)
         //changeColume()
         //let currentHeight = buildImageInSection( 0, startYpos:0, initializeFlag:false )
-        buildTotalImages(false)
+        buildTotalImages(false,scaleChange: true)
         pinchCount = 0
     }
     
     // private functions
     func timerFunc() {
         //changeColume()
-        buildTotalImages(false)
+        buildTotalImages(false,scaleChange: true)
     }
     
     private func crashImages() {
@@ -353,7 +353,7 @@ class GameScene: SKScene {
         }
         return (false,-1)
     }
-    private func buildTotalImages( initializeFlag:Bool ) {
+    private func buildTotalImages( initializeFlag:Bool,scaleChange:Bool ) {
         if initializeFlag == true {
             let sections = imageManager.getSectionArray()
             for sectionTitleString in sections {
@@ -377,10 +377,10 @@ class GameScene: SKScene {
             sectionSprite.titlePosition = position
             sectionSprite.titleNode.position = self.convertPointFromView(position)
             sectionStartPosition += sectionSprite.sectionSprite.size.height
-            sectionStartPosition = buildImageInSection(index, startYpos:sectionStartPosition, initializeFlag:initializeFlag)
+            sectionStartPosition = buildImageInSection(index, startYpos:sectionStartPosition, initializeFlag:initializeFlag,scaleChange: scaleChange)
         }
     }
-    private func buildImageInSection( section:Int, startYpos:CGFloat, initializeFlag:Bool )->CGFloat {
+    private func buildImageInSection( section:Int, startYpos:CGFloat, initializeFlag:Bool,scaleChange:Bool )->CGFloat {
         let numOfImage = imageManager.getImageCount(section)
         let spriteWidth = (screenSize.width - aroundSpace*2 - CGFloat(colume-1)*intervalSpace + xOffset*CGFloat(colume))  / CGFloat(colume)
         var totalHeight:CGFloat = 0
@@ -423,8 +423,14 @@ class GameScene: SKScene {
             if totalHeight < pos.y + imageSprite.targetSize.height {
                 totalHeight = pos.y + imageSprite.targetSize.height
             }
-            imageSprite.setPosition(pos)
-            self.imageSpriteArray.append(imageSprite)
+            if scaleChange == false {
+                imageSprite.setPosition(pos)
+                self.imageSpriteArray.append(imageSprite)
+            }else{
+                imageSprite.setTargetSize(CGSizeMake(spriteWidth, spriteWidth*imageSprite.originalSize.height/imageSprite.originalSize.width))
+                imageSprite.setPosition(pos)
+                imageSprite.moveWithAction()
+            }
         }
         return totalHeight
     }
