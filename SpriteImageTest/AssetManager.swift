@@ -112,6 +112,7 @@ class AssetManager:ImageManager {
     func getSections( buildFlag:Bool )->[String] {
         if buildFlag == true {
             buildSectionData()
+            AssetManager.initialize = true
         }
         var sectionString:[String] = []
         for sectionItem in itemsBySection {
