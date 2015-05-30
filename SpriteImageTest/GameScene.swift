@@ -512,8 +512,10 @@ class GameScene: SKScene {
     private func scrollImageSprite( distance:CGFloat ) {
         for section in sectionTitles {
             let sectionPos = CGPointMake(section.sectionPosition.x, section.sectionPosition.y+distance)
+            section.sectionPosition = sectionPos
             section.sectionSprite.position = convertPointFromView(sectionPos)
             let titlePos = CGPointMake(section.titlePosition.x, section.titlePosition.y+distance)
+            section.titlePosition = titlePos
             section.titleNode.position = convertPointFromView(titlePos)
         }
         for imageSprite in imageSpriteArray{
