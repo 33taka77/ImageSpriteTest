@@ -9,6 +9,7 @@
 import Foundation
 import Photos
 
+
 class AssetManager:ImageManager {
     static private var initialize = false
     private var sectionLevel:SectionLevel = SectionLevel.Middle
