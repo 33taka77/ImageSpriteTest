@@ -90,7 +90,9 @@ class GameScene: SKScene {
     let intervalSpace:CGFloat = 0.0
     let aroundSpace:CGFloat = 2.0
     let imageManager:ImageManager!
-    var imageSpriteArray:[ImageSprite] = []
+    //var imageSpriteArray:[ImageSprite] = []
+    var imageSpriteArray:[[ImageSprite]] = []
+    
     var imagesForDraw:[ImageSprite] = []
     var xOffset:CGFloat = 19
     var yOffset:CGFloat = 13
@@ -252,7 +254,7 @@ class GameScene: SKScene {
     private func removeAllImageSprite() {
         var removeImage:[AnyObject] = []
         for var i = 0; i < imagesForDraw.count; i++ {
-            let imageSprite = imageSpriteArray[i]
+            let imageSprite = imagesForDraw[i]
             if imageSprite.sprite != nil {
                 removeImage.append(imageSprite.sprite)
                 imageSprite.sprite = nil
@@ -261,6 +263,8 @@ class GameScene: SKScene {
         }
         self.removeChildrenInArray(removeImage)
     }
+    
+    /*
     private func changeColume() {
         let spriteWidth = (screenSize.width - aroundSpace*2 - CGFloat(colume-1)*intervalSpace + xOffset*CGFloat(colume))  / CGFloat(colume)
         for var i = 0; i < imageSpriteArray.count; i++ {
@@ -296,6 +300,8 @@ class GameScene: SKScene {
             //removeImageSprite(-200, endHeight: screenSize.height+500)
         }
     }
+    */
+
     private func getOffset( isVirtical:Bool ) {
         switch self.colume {
         case 1:
@@ -381,6 +387,7 @@ class GameScene: SKScene {
         }
     }
     private func buildImageInSection( section:Int, startYpos:CGFloat, initializeFlag:Bool,scaleChange:Bool )->CGFloat {
+        var imagesInSection:[ImageSprite] = []
         let numOfImage = imageManager.getImageCount(section)
         let spriteWidth = (screenSize.width - aroundSpace*2 - CGFloat(colume-1)*intervalSpace + xOffset*CGFloat(colume))  / CGFloat(colume)
         var totalHeight:CGFloat = 0
@@ -393,7 +400,8 @@ class GameScene: SKScene {
                 let size = CGSizeMake(spriteWidth, spriteWidth/sizeOfOriginal.width*sizeOfOriginal.height)
                 imageSprite = ImageSprite(index: index, targetWidth:spriteWidth, size:size, scene:self)
             }else{
-                imageSprite = imageSpriteArray[i]
+                imagesInSection = imageSpriteArray[section] as [ImageSprite]
+                imageSprite = imagesInSection[i]
                 if imageSprite.sprite != nil {
                     imageSprite.sprite.physicsBody = nil
                 }
@@ -411,7 +419,7 @@ class GameScene: SKScene {
                 let y = 0+self.aroundSpace + startYpos
                 pos = CGPointMake(x, y)
             }else{
-                let prevSprite:ImageSprite = self.imageSpriteArray[i-self.colume]
+                let prevSprite:ImageSprite = imagesInSection[i-self.colume]
                 if prevSprite.originalSize.height > prevSprite.originalSize.width {
                     getOffset(true)
                 }else{
@@ -425,15 +433,20 @@ class GameScene: SKScene {
             }
             if scaleChange == false {
                 imageSprite.setPosition(pos)
-                self.imageSpriteArray.append(imageSprite)
+                imagesInSection.append(imageSprite)
             }else{
                 imageSprite.setTargetSize(CGSizeMake(spriteWidth, spriteWidth*imageSprite.originalSize.height/imageSprite.originalSize.width))
                 imageSprite.setPosition(pos)
                 imageSprite.moveWithAction()
             }
         }
+        if scaleChange == false {
+            imageSpriteArray.append(imagesInSection)
+        }
         return totalHeight
     }
+    
+    /*
     private func buildImageSprite() {
         let numOfImage = imageManager.getImageCount(0)
         let spriteWidth = (screenSize.width - aroundSpace*2 - CGFloat(colume-1)*intervalSpace + xOffset*CGFloat(colume))  / CGFloat(colume)
@@ -475,22 +488,28 @@ class GameScene: SKScene {
             
         }
     }
+    */
+    
     private func prepareImageSpriteToDraw( startHeight:CGFloat, endHeight:CGFloat ) {
         //var returnImageSprite:[ImageSprite] = []
         var totalHeight:CGFloat = 0
         for var i = 0; i < self.imageSpriteArray.count; i++ {
-            let currentHeight = self.imageSpriteArray[i].posotion.y + self.imageSpriteArray[i].targetSize.height
-            if self.imageSpriteArray[i].posotion.y > startHeight && currentHeight < endHeight {
-                let index = self.imageSpriteArray[i].indexPath
-                let imageObject:ImageObject = imageManager.getImageObjectIndexAt(index)!
-                imageObject.getImageWithSize(self.imageSpriteArray[index.row].originalSize, callback: { (image) -> Void in
-                    let imageSprite = self.imageSpriteArray[index.row]
-                    imageSprite.setImageData(image)
-                    self.imagesForDraw.append(imageSprite)
-                })
+            let imagesInSection = self.imageSpriteArray[i]
+            for var j = 0; j < imagesInSection.count; j++ {
+                let currentHeight = imagesInSection[j].posotion.y + imagesInSection[j].targetSize.height
+                if imagesInSection[j].posotion.y > startHeight && currentHeight < endHeight {
+                    let index = imagesInSection[j].indexPath
+                    let imageObject:ImageObject = imageManager.getImageObjectIndexAt(index)!
+                    imageObject.getImageWithSize(imagesInSection[index.row].originalSize, callback: { (image) -> Void in
+                        let imageSprite = imagesInSection[index.row]
+                        imageSprite.setImageData(image)
+                        self.imagesForDraw.append(imageSprite)
+                    })
+                }
             }
         }
     }
+        
     private func removeImageSprite( startHeight:CGFloat, endHeight:CGFloat ) {
         var removeImage:[AnyObject] = []
         let count = imagesForDraw.count
@@ -524,9 +543,11 @@ class GameScene: SKScene {
             section.titlePosition = titlePos
             section.titleNode.position = convertPointFromView(titlePos)
         }
-        for imageSprite in imageSpriteArray{
-            imageSprite.posotion = CGPointMake(imageSprite.posotion.x, imageSprite.posotion.y+distance)
-            imageSprite.move()
+        for imagesInSection in imageSpriteArray {
+            for imageSprite in imagesInSection{
+                imageSprite.posotion = CGPointMake(imageSprite.posotion.x, imageSprite.posotion.y+distance)
+                imageSprite.move()
+            }
         }
         removeImageSprite(-200, endHeight: screenSize.height+200)
         //prepareImageSpriteToDraw(-200, endHeight: screenSize.height+200)

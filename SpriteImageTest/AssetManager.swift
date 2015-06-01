@@ -11,7 +11,7 @@ import Photos
 
 class AssetManager:ImageManager {
     static private var initialize = false
-    private var sectionLevel:SectionLevel = SectionLevel.Large
+    private var sectionLevel:SectionLevel = SectionLevel.Middle
     private var itemsBySection:[SectionInfo] = []
     private var list:AssetList!
     //static let sharedInstance = AssetManager()
