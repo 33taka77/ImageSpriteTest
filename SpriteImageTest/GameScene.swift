@@ -166,7 +166,7 @@ class GameScene: SKScene {
             if touch.tapCount == 1 {
                 
                 let distance = touchObject.prevPoint.y - location.y
-                scrollImageSprite(distance)
+                scrollImageSprite(distance,isBoundRequest: false)
             }
         }
     }
@@ -182,7 +182,7 @@ class GameScene: SKScene {
         case .flicScrollDown:
             println("")
             let distance = touchObject.speed * scrollAccellParameter
-            scrollImageSprite(-distance)
+            scrollImageSprite(-distance,isBoundRequest: false)
             touchObject.speed -= CGFloat(currentTime - touchObject.intervalTime) * decleaseSpeedParam
             if touchObject.speed < 0 {
                 touchObject.speed = 0
@@ -191,7 +191,7 @@ class GameScene: SKScene {
         case .filckScrollUp:
             println("")
             let distance = touchObject.speed * scrollAccellParameter
-            scrollImageSprite(distance)
+            scrollImageSprite(distance,isBoundRequest: false)
             touchObject.speed -= CGFloat(currentTime - touchObject.intervalTime) * decleaseSpeedParam
             if touchObject.speed < 0 {
                 touchObject.speed = 0
@@ -534,23 +534,56 @@ class GameScene: SKScene {
         self.removeChildrenInArray(removeImage)
     }
     
-    private func scrollImageSprite( distance:CGFloat ) {
-        for section in sectionTitles {
+    private func boundAnimation( delta:CGFloat ) {
+        scrollImageSprite(-delta,isBoundRequest: true)
+    }
+    private func scrollImageSprite( distance:CGFloat, isBoundRequest:Bool ) {
+        var totalHeight:CGFloat = 0
+        var isBound:Bool = false
+        var delta:CGFloat = 0
+        for (index,section) in enumerate(sectionTitles) {
             let sectionPos = CGPointMake(section.sectionPosition.x, section.sectionPosition.y+distance)
+            if index == 0 {
+                if sectionPos.y > 0 && distance > 0 {
+                    isBound = true
+                    delta = sectionPos.y
+                    //return
+                }
+            }
             section.sectionPosition = sectionPos
-            section.sectionSprite.position = convertPointFromView(sectionPos)
             let titlePos = CGPointMake(section.titlePosition.x, section.titlePosition.y+distance)
             section.titlePosition = titlePos
-            section.titleNode.position = convertPointFromView(titlePos)
+            
+            if isBoundRequest == false {
+                section.sectionSprite.position = convertPointFromView(sectionPos)
+                section.titleNode.position = convertPointFromView(titlePos)
+            }else{
+                let moveAction:SKAction = SKAction.moveTo(convertPointFromView(section.sectionPosition) , duration: 0.1)
+                let actionArray = [moveAction]
+                let action = SKAction.group(actionArray)
+                section.sectionSprite.runAction(action)
+                let moveActionString:SKAction = SKAction.moveTo(convertPointFromView(section.titlePosition) , duration: 0.1)
+                let actionArrayString = [moveActionString]
+                let actionString = SKAction.group(actionArrayString)
+                section.titleNode.runAction(actionString)
+            }
         }
         for imagesInSection in imageSpriteArray {
             for imageSprite in imagesInSection{
                 imageSprite.posotion = CGPointMake(imageSprite.posotion.x, imageSprite.posotion.y+distance)
-                imageSprite.move()
+                if isBoundRequest == false {
+                    imageSprite.move()
+                }else{
+                    imageSprite.moveWithAnimation()
+                }
             }
         }
+
         removeImageSprite(-200, endHeight: screenSize.height+200)
         //prepareImageSpriteToDraw(-200, endHeight: screenSize.height+200)
+        if isBound == true {
+            boundAnimation(delta)
+        }
         
     }
 }

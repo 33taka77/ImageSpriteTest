@@ -81,6 +81,14 @@ class ImageSprite {
             })
         }
     }
+    func moveWithAnimation() {
+        if self.sprite != nil {
+            let moveAction:SKAction = SKAction.moveTo(self.nodePosition, duration: 0.1)
+            let actionArray = [moveAction]
+            let action = SKAction.group(actionArray)
+            self.sprite.runAction(action)
+        }
+    }
     func moveWithAction() {
         if self.sprite != nil {
             let moveAction:SKAction = SKAction.moveTo(self.nodePosition, duration: 1.0)
