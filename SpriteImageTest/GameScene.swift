@@ -99,6 +99,7 @@ class GameScene: SKScene {
     var touchObject:TouchEventInfo!
     var pinchCount:Int = 0
     var sectionTitles:[SectionInfo] = []
+    var totalDisplayHeight:CGFloat = 0
     
     override init() {
         screenSize = CGSizeMake(0, 0)
@@ -385,6 +386,7 @@ class GameScene: SKScene {
             sectionStartPosition += sectionSprite.sectionSprite.size.height
             sectionStartPosition = buildImageInSection(index, startYpos:sectionStartPosition, initializeFlag:initializeFlag,scaleChange: scaleChange)
         }
+        totalDisplayHeight = sectionStartPosition
     }
     private func buildImageInSection( section:Int, startYpos:CGFloat, initializeFlag:Bool,scaleChange:Bool )->CGFloat {
         var imagesInSection:[ImageSprite] = []
@@ -509,7 +511,7 @@ class GameScene: SKScene {
             }
         }
     }
-        
+    
     private func removeImageSprite( startHeight:CGFloat, endHeight:CGFloat ) {
         var removeImage:[AnyObject] = []
         let count = imagesForDraw.count
